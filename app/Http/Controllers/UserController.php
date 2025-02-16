@@ -5,8 +5,16 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; 
 use Illuminate\Support\Facades\Validator;
+use App\Models\Post;
+
 class UserController extends Controller
 {
+    public function signup(){
+        return view('/register'); 
+    }
+    public function signin(){
+        return view('/login'); 
+    }
 
     public function Register(Request $request)
     {
@@ -25,8 +33,11 @@ class UserController extends Controller
         $data['password'] = bcrypt($data['password']);
         // dd($data);
         $user = User::create($data);
-
-        return redirect('/login')->with('success', 'Registration successful!'); 
+        if($user){
+            return redirect('/login')->with('success', 'Registration successful!'); 
+        }else{
+            return redirect('/register')->with('error', 'Registration Not successfully ocars!'); 
+        }
         // or you can use for save data in db
 
         // $user = new User();
@@ -34,9 +45,8 @@ class UserController extends Controller
         // $user->email = $request->input('email');
         // $user->password = bcrypt($request->input('password'));
         // $user->save();
-
-
     }
+
     public function Login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -49,34 +59,84 @@ class UserController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
-        // $pass = bcrypt($request->input('password'));
-        $credentials = $request->only('email', 'password'); 
-        // dd($credentials);
-
-        if (Auth::attempt($credentials)) {
-            return redirect('/dashboard'); 
+        $credentials = $request->only('email', 'password');
+        if (Auth::attempt($credentials)) {    
+            return redirect('/dashboard');
         }
 
         return redirect('/login') 
-            ->withErrors(['email' => 'These credentials do not match our records.']) // Custom error message
+            ->withErrors(['email' => 'These credentials do not match our records.'])
             ->withInput(); 
 
     }
 
     public function DashboardUser(){
-        // $user = Auth::user(); 
-        // dd($user);
-        // dd('dashboard');
         if(Auth::check()){
             return view('Dashboard.DashboardUser'); 
         }else{
-
             return view('/'); 
         }
-
-        // return redirect('/login') // Or back()
-        //         ->withErrors('lsdjf');
     }
 
+
+    public function logout(){
+        Auth::logout();
+        return view('/login');
+    }
+
+
+    public function showAddPostForm()
+    {
+        if(Auth::check()){
+            return view('dashboard.addpost');
+        }else{
+            return view('/');
+            
+        }
+    }
+
+    public function add_posts(Request $request){
+        $user = Auth::user();
+        if(Auth::check()){
+            // dd($user);
+            // if($request){
+                $request->validate([
+                    'p_title' => 'required|string|max:255',
+                    'p_url' => 'required|string|unique:posts,p_url',
+                    'short_des' => 'required|string|max:255',
+                    'p_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+                    'p_description' => 'required',
+                    'meta_title' => 'required|string|max:255',
+                    'meta_description' => 'required|string',
+                ]);
+                // dd($request);
+                // Handle Image Upload
+                $imagePath = null;
+                if ($request->hasFile('p_image')) {
+                    $imagePath = $request->file('p_image')->store('posts', 'public');
+                }
+        
+                // Create Post
+                Post::create([
+                    'user_id' => Auth::id(),
+                    'p_title' => $request->p_title,
+                    'p_url' => $request->p_url,
+                    'short_des' => $request->short_des,
+                    'p_image' => $imagePath,
+                    'p_description' => $request->p_description,
+                    'meta_title' => $request->meta_title,
+                    'meta_description' => $request->meta_description,
+                ]);
+        
+                return redirect()->route('Dashboard.AddPost')->with('success', 'Post created successfully!');
+            // }else{
+            //     return redirect()->route('Dashboard.AddPost');                
+            // }
+            // return redirect('addpost');                
+        }else{
+
+            return redirect('/'); 
+        }
+    }   
 
 }
