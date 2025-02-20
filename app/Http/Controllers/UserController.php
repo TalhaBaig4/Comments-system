@@ -98,6 +98,7 @@ class UserController extends Controller
     public function add_posts(Request $request){
         $user = Auth::user();
         if(Auth::check()){
+            
             // dd($user);
             // if($request){
                 $request->validate([
