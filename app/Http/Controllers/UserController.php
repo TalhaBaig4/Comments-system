@@ -88,7 +88,7 @@ class UserController extends Controller
     public function showAddPostForm()
     {
         if(Auth::check()){
-            return view('dashboard.addpost');
+            return view('dashboard.AddPost');
         }else{
             return view('/');
             
@@ -97,8 +97,9 @@ class UserController extends Controller
 
     public function add_posts(Request $request){
         $user = Auth::user();
+        // dd('sdf');
+
         if(Auth::check()){
-            
             // dd($user);
             // if($request){
                 $request->validate([
@@ -114,9 +115,12 @@ class UserController extends Controller
                 // Handle Image Upload
                 $imagePath = null;
                 if ($request->hasFile('p_image')) {
-                    $imagePath = $request->file('p_image')->store('posts', 'public');
+                    $image = $request->file('p_image');
+                    $img_name = time() . '_' . $image->getClientOriginalName();
+                    $destinationPath = public_path('posts'); 
+                    $image->move($destinationPath, $img_name);
+                    $imagePath = 'posts/' . $img_name;
                 }
-        
                 // Create Post
                 Post::create([
                     'user_id' => Auth::id(),
@@ -139,5 +143,18 @@ class UserController extends Controller
             return redirect('/'); 
         }
     }   
+
+    public function allpost()
+    {  
+        if(Auth::check()){
+            $posts = post::get();
+            // dd($posts);
+            return view('dashboard.allposts', compact('posts'));
+
+        }else{
+            return view('/');
+        }
+    }
+
 
 }

@@ -19,6 +19,7 @@ Route::get('/login', [UserController::class, 'signin'])->name('login');
 Route::get('/register', [UserController::class, 'signup'])->name('signup');
 Route::post('/login', [UserController::class, 'Login'])->name('loginUser'); 
 Route::post('/register', [UserController::class, 'Register'])->name('registerUser'); 
+Route::match(['get', 'post'], '/blog', [PostController::class, 'blog'])->name('blog'); 
 
 // 🔒 Protected Routes (Requires Authentication)
 Route::middleware(['auth'])->group(function () {
