@@ -16,5 +16,6 @@ class PostController extends Controller
         // dd($posts);
         return view('view-post',compact('latestPost','posts'));
 
+        // kii a ik aohg
     }
 }
