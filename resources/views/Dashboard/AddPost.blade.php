@@ -14,7 +14,7 @@
             @endif
             <form method="post" action="{{ route('addPosts') }}" enctype="multipart/form-data">
                 @csrf
-                <div class="col-md-6 col-md-12">
+                <div class="col-lg-8 col-md-12">
                     <div class="form-group">
                         <label class="h4">Post Title</label>
                         <input class='form-control' type='text' name='p_title' value="{{ old('p_title') }}" required
@@ -50,7 +50,7 @@
                         <input class='form-control' type='text' name='meta_description'
                             value="{{ old('meta_description') }}" required placeholder="Meta Description" />
                     </div>
-                    <div class="form-group mb-5">
+                    <div class="form-group mt-3 mb-5">
                         <input type="submit" name="submit" class="btn btn-primary" value="Add Post">
                     </div>
                 </div>

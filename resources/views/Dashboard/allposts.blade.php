@@ -9,12 +9,12 @@
     </div>
     <div class="main-content">
         <div class="row my-3">
-            <a href="{{ URL::to('/admin/addpost') }}" class="btn btn-primary col-md-2">Add New Post</a>
-            <div class="col-md-4">
-                <input type="hidden" name="_token" id="search_token" value="{{ csrf_token() }}">
-                <input type="text" id="search_cal" class="form-control" placeholder="Search by Parent">
-            </div>
             <div class="col-md-12">
+                <a href="{{ URL::to('/addpost') }}" class="btn btn-primary col-md-2">Add New Post</a>
+                <div class="col-md-4 d-inline-block">
+                    <input type="text" id="search_cal" class="form-control" placeholder="Search by Parent">
+                    <input type="hidden" name="_token" id="search_token" value="{{ csrf_token() }}">
+                </div>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         All Posts
@@ -34,15 +34,15 @@
                         <tbody class="after_search">
                             <?php $i = 1; ?>
                             <?php foreach ($posts as $row) {?>
-                            <?php $id = $row->post_id; ?>
+                            <?php $id = $row->id; ?>
                             <tr>
                                 <td><?= $row->updated_at ?></td>
                                 <td><?= $i ?></td>
                                 <td><?= $row->p_title ?></td>
                                 <td>
-                                    <a href="{{ URL::to($row->p_url) }}" class="label label-success">View
+                                    <a href="{{ URL::to('blog/'.$row->p_url) }}" class="label label-success">View
                                         Post</a>
-                                    <a href="{{ URL::to('admin/posts/' . $id) }}" class="label label-info">Edit Post</a>
+                                    <a href="{{ URL::to('posts/' . $id) }}" class="label label-info">Edit Post</a>
                                     <a href="" class="label label-danger" data-toggle="modal"
                                         data-target="#exampleModal">Delete</a>
                                     <!-- Modal -->
@@ -63,7 +63,7 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-dismiss="modal">No</button>
-                                                    <a href="{{ URL::to('admin/posts/' . $id . '/delete') }}"
+                                                    <a href="{{ URL::to('posts/' . $id . '/delete') }}"
                                                         class="btn btn-primary">Yes</a>
                                                 </div>
                                             </div>

@@ -10,16 +10,18 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return view('main');
-});
+// Route::get('/', function () {
+//     return view('main');
+// });
 
 // 🟢 Public Routes (No Authentication Required)
+Route::get('/', [UserController::class, 'main']);
 Route::get('/login', [UserController::class, 'signin'])->name('login');
 Route::get('/register', [UserController::class, 'signup'])->name('signup');
 Route::post('/login', [UserController::class, 'Login'])->name('loginUser'); 
 Route::post('/register', [UserController::class, 'Register'])->name('registerUser'); 
 Route::match(['get', 'post'], '/blog', [PostController::class, 'blog'])->name('blog'); 
+Route::get('/blog/{slug}', [PostController::class, 'ViewBlog']);
 
 // 🔒 Protected Routes (Requires Authentication)
 Route::middleware(['auth'])->group(function () {

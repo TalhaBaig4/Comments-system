@@ -1,5 +1,6 @@
 @extends('Files.master')
-
+@section('title', $meta_title)
+@section('meta_des', $meta_des)
 @section('content')
 @if ($errors->any())
     <div class="text-danger">
@@ -11,7 +12,7 @@
     </div>
 @endif
 
-<form method="POST" action="{{ route('registerPage')}}">
+<form method="POST" action="{{ route('registerUser')}}">
     @csrf
     <div class="mb-3">
         <label for="name" class="form-label">Name</label>

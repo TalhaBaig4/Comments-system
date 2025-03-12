@@ -9,11 +9,25 @@ use App\Models\Post;
 
 class UserController extends Controller
 {
+    public function main() {
+        $latestPost = Post::orderBy('created_at', 'desc')->first();
+        $posts = post::all();
+        $data['meta_title'] = "All Blog pages";
+		$data['meta_des'] = "All Blog pages";
+        // dd($data);
+        $viewData = array_merge(compact('latestPost', 'posts'), $data);
+        return view('main', $viewData); 
+
+    }
     public function signup(){
-        return view('/register'); 
+        $data['meta_title'] = "Registration page";
+		$data['meta_des'] = "Registration page";
+        return view('/register', $data); 
     }
     public function signin(){
-        return view('/login'); 
+        $data['meta_title'] = "Login page";
+		$data['meta_des'] = "Login page";
+        return view('/login', $data); 
     }
 
     public function Register(Request $request)
@@ -81,7 +95,9 @@ class UserController extends Controller
 
     public function logout(){
         Auth::logout();
-        return view('/login');
+        $data['meta_title'] = "Login page";
+		$data['meta_des'] = "Login page";
+        return view('/login',$data);
     }
 
 
@@ -96,9 +112,6 @@ class UserController extends Controller
     }
 
     public function add_posts(Request $request){
-        $user = Auth::user();
-        // dd('sdf');
-
         if(Auth::check()){
             // dd($user);
             // if($request){
@@ -147,9 +160,10 @@ class UserController extends Controller
     public function allpost()
     {  
         if(Auth::check()){
-            $posts = post::get();
-            // dd($posts);
-            return view('dashboard.allposts', compact('posts'));
+            $user_id = auth::user()->id;
+            $posts = post::where('user_id',$user_id)->get();
+            
+            return view('dashboard.allposts', compact('posts','data'));
 
         }else{
             return view('/');
