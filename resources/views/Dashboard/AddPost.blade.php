@@ -1,4 +1,4 @@
-@extends('Files.master')
+@extends('Files.adminMaster')
 @section('content')
     {{-- @section('admin') --}}
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
@@ -14,7 +14,7 @@
             @endif
             <form method="post" action="{{ route('addPosts') }}" enctype="multipart/form-data">
                 @csrf
-                <div class="col-lg-8 col-md-12">
+                <div class="col-md-12">
                     <div class="form-group">
                         <label class="h4">Post Title</label>
                         <input class='form-control' type='text' name='p_title' value="{{ old('p_title') }}" required

@@ -13,7 +13,7 @@
                     {{-- <img src="{{ url('https://proconcretecalculator.com/assets/imgs/blog_images/Concrete Mixing Ratios.jpg') }}" width="100%" height="500px" alt="{{ $latestPost->p_title }}"> --}}
                 </div>
                 <div class="col-md-6 pe-0">
-                    <div class="latestpost">{!! ($latestPost->p_des) !!}</div>
+                    <div class="latestpost">{!! ($latestPost->p_description) !!}</div>
                     <div class="col-12 p-0 margin_top_20">
                         <a class="readMore" href="{{ url('blog/' . $latestPost->p_url) }}" title="Read More">
                             Read More

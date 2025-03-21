@@ -28,7 +28,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/logout', [UserController::class, 'logout'])->name('logout'); 
     Route::get('/dashboard', [UserController::class, 'DashboardUser'])->name('dashboard');
 
-    // Post Routes (Only for Logged-in Users)
+    Route::match(['get', 'post'],'/delete-post/{id}',[PostController::class,'deletePost']);
+    
+    Route::get('/edit-post/{id}', [PostController::class, 'editPost']);
+    Route::post('/edit-post/{id}', [PostController::class, 'updatePost']);
+
     Route::get('/addpost', [UserController::class, 'showAddPostForm'])->name('Dashboard.AddPost');
     Route::post('/addpost', [UserController::class, 'add_posts'])->name('addPosts');
 

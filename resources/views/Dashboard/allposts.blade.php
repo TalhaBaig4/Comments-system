@@ -1,14 +1,30 @@
-@extends('Files.master')
+@extends('Files.adminMaster')
 @section('content')
-    <ul class="nav nav-list collapse in">
-
-    </ul>
-
     <div class="header">
         <h1 class="page-title">Posts</h1>
     </div>
     <div class="main-content">
         <div class="row my-3">
+            @if(session('success'))
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                            <button data-dismiss="alert" class="close" type="button">×</button>
+                        </div>
+                    </div>
+                </div>
+            @endif
+			@if(session('error'))
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                            <button data-dismiss="alert" class="close" type="button">×</button>
+                        </div>
+                    </div>
+                </div>
+            @endif
             <div class="col-md-12">
                 <a href="{{ URL::to('/addpost') }}" class="btn btn-primary col-md-2">Add New Post</a>
                 <div class="col-md-4 d-inline-block">
@@ -22,10 +38,10 @@
                     <table class="table table-bordered table-first-column-check table-hover">
                         <thead>
                             <tr>
-                                <th class="col-md-4">Date</th>
+                                <th class="col-md-2">Date</th>
                                 <th>#</th>
-                                <th class="col-md-4">Post Title</th>
-                                <th class="col-md-4">Action</th>
+                                <th class="col-md-5">Post Title</th>
+                                <th class="col-md-5">Action</th>
                             </tr>
                         </thead>
                         <tbody class="get_result">
@@ -40,10 +56,10 @@
                                 <td><?= $i ?></td>
                                 <td><?= $row->p_title ?></td>
                                 <td>
-                                    <a href="{{ URL::to('blog/'.$row->p_url) }}" class="label label-success">View
+                                    <a href="{{ URL::to('blog/'.$row->p_url) }}" class="btn btn-primary">View
                                         Post</a>
-                                    <a href="{{ URL::to('posts/' . $id) }}" class="label label-info">Edit Post</a>
-                                    <a href="" class="label label-danger" data-toggle="modal"
+                                    <a href="{{ URL::to('edit-post/' . $id) }}" class="btn btn-info text-white">Edit Post</a>
+                                    <a href="{{ URL::to('delete-post/' . $id) }}" class="btn btn-danger" data-toggle="modal"
                                         data-target="#exampleModal">Delete</a>
                                     <!-- Modal -->
                                     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"

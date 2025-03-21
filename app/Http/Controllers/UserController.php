@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; 
 use Illuminate\Support\Facades\Validator;
 use App\Models\Post;
-
+use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public function main() {
@@ -29,7 +30,6 @@ class UserController extends Controller
 		$data['meta_des'] = "Login page";
         return view('/login', $data); 
     }
-
     public function Register(Request $request)
     {
         $data = Validator::make($request->all(), [
@@ -75,7 +75,15 @@ class UserController extends Controller
         }
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {    
-            return redirect('/dashboard');
+            $user = Auth::user();
+
+            if ($user->role == 1) {
+                // dd($user->role);
+                return redirect('/dashboard');
+            } else {
+                // Redirect to dashboard for other roles
+                return redirect('/dashboard');
+            }
         }
 
         return redirect('/login') 
@@ -86,7 +94,7 @@ class UserController extends Controller
 
     public function DashboardUser(){
         if(Auth::check()){
-            return view('Dashboard.DashboardUser'); 
+            return view('Dashboard.AddPost'); 
         }else{
             return view('/'); 
         }
@@ -95,9 +103,7 @@ class UserController extends Controller
 
     public function logout(){
         Auth::logout();
-        $data['meta_title'] = "Login page";
-		$data['meta_des'] = "Login page";
-        return view('/login',$data);
+        return redirect('/login');
     }
 
 
@@ -107,11 +113,11 @@ class UserController extends Controller
             return view('dashboard.AddPost');
         }else{
             return view('/');
-            
         }
     }
 
     public function add_posts(Request $request){
+
         if(Auth::check()){
             // dd($user);
             // if($request){
@@ -145,7 +151,6 @@ class UserController extends Controller
                     'meta_title' => $request->meta_title,
                     'meta_description' => $request->meta_description,
                 ]);
-        
                 return redirect()->route('Dashboard.AddPost')->with('success', 'Post created successfully!');
             // }else{
             //     return redirect()->route('Dashboard.AddPost');                
@@ -160,10 +165,15 @@ class UserController extends Controller
     public function allpost()
     {  
         if(Auth::check()){
-            $user_id = auth::user()->id;
-            $posts = post::where('user_id',$user_id)->get();
-            
-            return view('dashboard.allposts', compact('posts','data'));
+            $user = Auth::user();
+            if ($user->role == 1) {
+                $posts = post::get();
+                return view('Dashboard.allposts', compact('posts'));
+            }else{
+                $user_id = auth::user()->id;
+                $posts = post::where('user_id',$user_id)->get();
+                return view('Dashboard.allposts', compact('posts'));
+            }
 
         }else{
             return view('/');
